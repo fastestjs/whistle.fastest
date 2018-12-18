@@ -1,0 +1,8 @@
+/node_modules
+/dev
+/.pack-tmp
+/public
+.idea
+.DS_Store
+.cache/
+/dist
