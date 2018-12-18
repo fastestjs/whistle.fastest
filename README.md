@@ -17,6 +17,31 @@ whistle.fastest 主要功能点如下：
 - 白名单抓包，只对有权限的用户展示抓包结果
 - 白名单代理，只对有权限的用户进行代理
 
+## 开发调试
+
+### 安装插件
+
+[whistle插件开发文档](https://wproxy.org/whistle/plugins.html) 中提到需要将插件安装到全局，可以使用下面命令将本地的包软链到全局。
+
+```bash
+sudo npm link
+```
+
+安装成功之后，可以在 whistle 的管理端页面 `Plugins` tab 页看到安装的插件。
+
+
+### 调试插件
+
+开启 whistle 的调试模式，这样可以在控制台看到插件console输出的日志及错误。
+
+```bash
+w2 stop
+w2 run
+```
+
+修改插件代码后，需要触发插件项目的 package.json 修改才会重新加载该插件，比如添加或删除一个空格。
+
+
 ## 文档
 
 - [whistle插件开发文档](https://wproxy.org/whistle/plugins.html)
