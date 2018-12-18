@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "events": "^3.0.0",
+    "iconv-lite": "^0.4.24",
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
     "koa-onerror": "^4.1.0",

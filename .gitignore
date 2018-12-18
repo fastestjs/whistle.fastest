@@ -1,4 +1,4 @@
-/node_modules
+node_modules
 /dev
 /.pack-tmp
 /public
