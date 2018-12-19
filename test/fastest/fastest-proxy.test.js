@@ -38,20 +38,20 @@ describe('./lib/fastest/fastest-proxy.js isMatchVHost()', () => {
     });
 });
 
-describe('./lib/fastest/fastest-proxy.js replaceFastestVHost()', () => {
+describe('./lib/fastest/fastest-proxy.js removeVHost()', () => {
     it('check url1 and pattern1', () => {
-        expect(fastestProxy.replaceFastestVHost(url1, pattern1)).to.equal('http://fastest2.now.qq.com/now/activity/spring-festival-2019/index_b4980e63.js?_bid=152');
+        expect(fastestProxy.removeVHost(url1, pattern1)).to.equal('http://fastest2.now.qq.com/now/activity/spring-festival-2019/index_b4980e63.js?_bid=152');
     });
 
     it('check url1 and pattern2', () => {
-        expect(fastestProxy.replaceFastestVHost(url1, pattern2)).to.equal(url1);
+        expect(fastestProxy.removeVHost(url1, pattern2)).to.equal(url1);
     });
 
     it('check url2 and pattern2', () => {
-        expect(fastestProxy.replaceFastestVHost(url2, pattern2)).to.equal(url2);
+        expect(fastestProxy.removeVHost(url2, pattern2)).to.equal(url2);
     });
 
     it('check url2 and pattern3', () => {
-        expect(fastestProxy.replaceFastestVHost(url2, pattern3)).to.equal('http://fastest2.now.qq.com/now/abc');
+        expect(fastestProxy.removeVHost(url2, pattern3)).to.equal('http://fastest2.now.qq.com/now/abc');
     });
 });
