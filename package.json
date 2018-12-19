@@ -4,7 +4,8 @@
   "description": "whistle plugin fastest12",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./node_modules/mocha/bin/_mocha --recursive",
+    "eslint": "eslint lib/"
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +20,10 @@
     "stream": "0.0.2",
     "url": "^0.11.0",
     "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
   }
 }
