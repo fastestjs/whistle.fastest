@@ -46,4 +46,3 @@ w2 run
 
 - [whistle插件开发文档](https://wproxy.org/whistle/plugins.html)
 - [whistle.script文档](https://github.com/whistle-plugins/whistle.script)（现在的demo就是基于这个插件写的）
-- [现有demo](http://capture.fastest.oa.com/#plugins)
