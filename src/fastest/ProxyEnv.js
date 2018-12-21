@@ -24,6 +24,12 @@ class ProxyEnv {
         this.proxyDomain = data.proxy_domain;
 
         /**
+         * 本地的 whistle 服务地址，例如 http://127.0.0.1:8080
+         * @type {string}
+         */
+        this.whistleServer = data.whistle_server;
+
+        /**
          * 是否被禁用
          * @type {Boolean}
          */

@@ -5,6 +5,7 @@ module.exports = {
         name: '201测试环境',
         origin_domain: 'now.qq.com',
         proxy_domain: 'fastest2.now.qq.com',
+        whistle_server: 'http://127.0.0.1:8080',
         status: 1,
         rules: [
             {

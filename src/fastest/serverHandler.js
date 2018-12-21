@@ -1,5 +1,5 @@
 const fastestCore = require('./fastest-core');
-
+const Fastest = require('./Fastest');
 
 // 异步请求函数，请求 fastest 服务端接口
 function getFastestRewriteHtml(id, htmlContent) {
@@ -65,32 +65,18 @@ function getFastestRewriteHtml(id, htmlContent) {
 exports.handleRequest = async (ctx, next) => {
     // https://github.com/whistle-plugins/whistle.script#%E6%93%8D%E4%BD%9C%E8%AF%B7%E6%B1%82
     console.log('handleRequest start', ctx.fullUrl);
-    // console.log('handleRequest start==', ctx.request);
 
-    // 由于上一步已经限制了域名为 testDomain 的才过来，因此此处可以不需要再判断是不是 testDomain 了。
-    const { curFastestConfig } = ctx.options;
+    const fastest = new Fastest(ctx.options.proxyEnv, ctx);
 
-    // 通过id去fastest服务端查询，针对该次请求该如何转发
-    // const rewriteConfig = await fastestCore.getRewriteOpts(curFastestConfig.id, ctx.request);
-    const rewriteConfig = await fastestCore.getRewriteOpts({
-        originDomain: curFastestConfig.product_domain,
-        rulesFromCustom: [
-            'now.qq.com 10.100.64.201', // 用户自己配置
-            'now.qq.com/cgi-bin 10.100.64.201', // 用户自己配置
-            '11.url.cn 10.100.64.201', // 用户自己配置，且与主域一致
-            '88.url.cn 10.100.64.136' // 用户自己配置，且与主域不一致，fastest不改动
-        ],
-        requestUrl: ctx.request.url
-    });
-    console.log('--rewriteConfig--', rewriteConfig);
+    // 获取本次的请求该如何转发
+    const recoverRequestResult = await fastest.recoverRequest();
+    console.log('--recoverRequestResult--', recoverRequestResult);
 
-    // 重要 fullUrl 一定要修改，因为后续 urlParse 的时候是拿这个值处理的
-    ctx.fullUrl = rewriteConfig.fullUrl;
+    // 重要: fullUrl 一定要修改，因为后续 urlParse 的时候是拿这个值处理的
+    ctx.fullUrl = recoverRequestResult.fullUrl;
 
-    let whistleProxyUrl = 'http://127.0.0.1:8080';
-
-    // 一定要设置使用 whistle 的代理，否则转发了请求之后，就无法真正获得测试环境的数据了
-    const { headers } = await next({ proxyUrl: whistleProxyUrl });
+    // 重要: 一定要设置使用 whistle 的代理，否则转发了请求之后，就无法真正获得测试环境的数据了
+    const { headers } = await next({ proxyUrl: fastest.proxyEnv.whistleServer });
 
     // ---------------------------------------------------------------------------
     // begin 传递一些相关信息到 fastest 服务器，来判断如何重新修改结果
@@ -101,7 +87,7 @@ exports.handleRequest = async (ctx, next) => {
         const resText = await ctx.getResText();
 
         // 获取改写后的结果
-        const rewriteHtml = await getFastestRewriteHtml(curFastestConfig.id, resText);
+        const rewriteHtml = await getFastestRewriteHtml(fastest.proxyEnv, resText);
 
         // 修改响应内容
         ctx.body = rewriteHtml.body; // 修改响应内容
