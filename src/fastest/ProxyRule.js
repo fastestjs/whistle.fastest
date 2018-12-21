@@ -1,3 +1,5 @@
+const fastestProxy = require('./fastest-proxy');
+
 /**
  * 规则类型
  * @type {Object}
@@ -12,6 +14,22 @@ const TYPE = {
      * CGI 资源
      */
     CGI: 2
+};
+
+/**
+ * 代理类型
+ * @type {Object}
+ */
+const PROXY_TYPE = {
+    /**
+     * 设置 host
+     */
+    HOST: 1,
+
+    /**
+     * 转发
+     */
+    FORWARD: 2
 };
 
 /**
@@ -46,6 +64,18 @@ class ProxyRule {
          * @type {Boolean}
          */
         this.isDisable = !!data.status || false;
+    }
+
+    isProxyTypeOfHost(url) {
+        return fastestProxy.isMatchVHost(url, this.pattern);
+    }
+
+    getProxyTypeOfHostResult(url) {
+        return {
+            // 注意 pattern 不一定是域名，可能包含路径，而 host 只需要域名即可
+            host: this.pattern.split('/')[0],
+            url: fastestProxy.removeVHost(url, this.pattern)
+        };
     }
 }
 

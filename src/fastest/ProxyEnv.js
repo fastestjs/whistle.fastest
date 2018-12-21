@@ -13,6 +13,17 @@ class ProxyEnv {
         this.name = data.name || '';
 
         /**
+         * 正式环境的原始域名
+         */
+        this.originDomain = data.origin_domain;
+
+        /**
+         * 测试环境的代理域名
+         * @type {string}
+         */
+        this.proxyDomain = data.proxy_domain;
+
+        /**
          * 是否被禁用
          * @type {Boolean}
          */
