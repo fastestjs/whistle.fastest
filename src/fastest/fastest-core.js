@@ -1,6 +1,4 @@
-'use strict';
-
-var fastestProxy = require('./fastest-proxy');
+const fastestProxy = require('./fastest-proxy');
 
 /**
  * 获取转发路由等配置信息，以便获知本次请求该如何转发。
@@ -12,10 +10,8 @@ var fastestProxy = require('./fastest-proxy');
  * @return {Promise<any>}
  */
 function getRewriteOpts(opts) {
-    return new Promise(function (resolve, reject) {
-        var originDomain = opts.originDomain,
-            rulesFromCustom = opts.rulesFromCustom,
-            requestUrl = opts.requestUrl;
+    return new Promise((resolve, reject) => {
+        const { originDomain, rulesFromCustom, requestUrl } = opts;
 
         // 通过 id 查询到配置
         // const fastestConfig = {
@@ -32,8 +28,7 @@ function getRewriteOpts(opts) {
         // };
 
         // 重新请求规则
-
-        var rewriteOpts = {
+        const rewriteOpts = {
             host: originDomain,
             url: requestUrl
         };
@@ -50,9 +45,9 @@ function getRewriteOpts(opts) {
 
         // TODO 如果支持用户自定义输入，则这里可能需要限制下书写规范，或者看看 whistle 是怎么识别哪些是 pattern
         // 我们假设限制都是只支持 host 方式的配置
-        rulesFromCustom.forEach(function (rule) {
-            var arr = rule.trim().split(/\s+/);
-            var pattern = arr[0];
+        rulesFromCustom.forEach((rule) => {
+            const arr = rule.trim().split(/\s+/);
+            const pattern = arr[0];
 
             // 如果是修改 host 场景
             if (fastestProxy.isMatchVHost(rewriteOpts.url, pattern)) {
@@ -62,6 +57,7 @@ function getRewriteOpts(opts) {
             }
 
             // TODO 要考虑请求转发的场景
+
         });
 
         //--------------------------------------------------
@@ -69,12 +65,12 @@ function getRewriteOpts(opts) {
         //--------------------------------------------------
 
         // 重要 fullUrl 一定要修改，因为后续 urlParse 的时候是拿这个值处理的
-        rewriteOpts.fullUrl = 'http://' + rewriteOpts.host + rewriteOpts.url;
+        rewriteOpts.fullUrl = `http://${rewriteOpts.host}${rewriteOpts.url}`;
 
         resolve(rewriteOpts);
     });
 }
 
 module.exports = {
-    getRewriteOpts: getRewriteOpts
+    getRewriteOpts
 };

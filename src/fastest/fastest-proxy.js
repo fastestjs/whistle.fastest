@@ -1,6 +1,4 @@
-'use strict';
-
-var fastestUtil = require('./fastest-util');
+const fastestUtil = require('./fastest-util');
 
 /**
  * 将点号替换为下划线。
@@ -25,7 +23,7 @@ function replaceDotToUnderline(str) {
  * @return {Boolean}
  */
 function isMatchVHost(requestUrl, pattern) {
-    return !!requestUrl.match(new RegExp('vhost/' + replaceDotToUnderline(pattern) + '/vhost/'));
+    return !!requestUrl.match(new RegExp(`vhost/${replaceDotToUnderline(pattern)}/vhost/`));
 }
 
 /**
@@ -36,7 +34,7 @@ function isMatchVHost(requestUrl, pattern) {
  * @return {String}
  */
 function removeVHost(requestUrl, pattern) {
-    return requestUrl.replace(new RegExp('vhost/' + replaceDotToUnderline(pattern) + '/vhost/', 'gi'), '');
+    return requestUrl.replace(new RegExp(`vhost/${replaceDotToUnderline(pattern)}/vhost/`, 'gi'), '');
 }
 
 /**
@@ -48,16 +46,13 @@ function removeVHost(requestUrl, pattern) {
  * @return {String}
  */
 function addVHost(content, pattern, testDomain) {
-    return content.replace(new RegExp(pattern, 'gi'), testDomain + '/vhost/' + replaceDotToUnderline(pattern) + '/vhost');
+    return content.replace(new RegExp(pattern, 'gi'), `${testDomain}/vhost/${replaceDotToUnderline(pattern)}/vhost`);
 }
 
 // 异步请求函数，请求 fastest 服务端接口
-function getRewriteHtml(htmlContent) {
-    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    return new Promise(function (resolve, reject) {
-        var testDomain = opts.testDomain,
-            rulesFromCustom = opts.rulesFromCustom;
+function getRewriteHtml(htmlContent, opts = {}) {
+    return new Promise((resolve, reject) => {
+        const { testDomain, rulesFromCustom } = opts;
 
         // 通过 id 查询到配置
         // const fastestConfig = {
@@ -74,8 +69,7 @@ function getRewriteHtml(htmlContent) {
         // };
 
         // html 文件内容
-
-        var newHtmlContent = htmlContent;
+        let newHtmlContent = htmlContent;
 
         //------------begin 修改 html 文件的内容--------------
         // 示例：替换静态资源
@@ -83,11 +77,11 @@ function getRewriteHtml(htmlContent) {
 
         // 如果支持用户自定义输入，则这里可能需要限制下书写规范，或者看看 whistle 是怎么识别哪些是 pattern
         // 我们假设限制都是只支持 host 方式的配置
-        rulesFromCustom.forEach(function (rule) {
-            var ruleInfo = fastestUtil.parseWhistleRule(rule);
+        rulesFromCustom.forEach((rule) => {
+            const ruleInfo = fastestUtil.parseWhistleRule(rule);
 
             // 是否为修改host场景
-            var isTypeHost = fastestUtil.isIP(ruleInfo.operatorURI);
+            const isTypeHost = fastestUtil.isIP(ruleInfo.operatorURI);
 
             console.log('------', rule, isTypeHost, ruleInfo);
 
@@ -97,6 +91,7 @@ function getRewriteHtml(htmlContent) {
             }
 
             // TODO 还需要考虑配置转发的场景
+
         });
 
         // 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
@@ -114,9 +109,9 @@ function getRewriteHtml(htmlContent) {
 }
 
 module.exports = {
-    replaceDotToUnderline: replaceDotToUnderline,
-    isMatchVHost: isMatchVHost,
-    removeVHost: removeVHost,
-    addVHost: addVHost,
-    getRewriteHtml: getRewriteHtml
+    replaceDotToUnderline,
+    isMatchVHost,
+    removeVHost,
+    addVHost,
+    getRewriteHtml
 };

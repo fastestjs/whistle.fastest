@@ -1,14 +1,10 @@
-'use strict';
+const { PassThrough } = require('stream');
+const parseurl = require('parseurl');
+const urlParse = require('url').parse;
 
-var _require = require('stream'),
-    PassThrough = _require.PassThrough;
-
-var parseurl = require('parseurl');
-var urlParse = require('url').parse;
-
-exports.getConfById = function (list, id) {
-    var ret = {};
-    list.forEach(function (item) {
+exports.getConfById = (list, id) => {
+    let ret = {};
+    list.forEach(item => {
         if (item.id == id) {
             ret = item;
         }
@@ -16,30 +12,26 @@ exports.getConfById = function (list, id) {
     return ret;
 };
 
-exports.formatRules = function () {
-    var rules = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-    var ret = [];
-    rules.forEach(function (rule) {
-        var item = rule.rule + ' ' + rule.host;
+exports.formatRules = (rules = []) => {
+    let ret = [];
+    rules.forEach(rule => {
+        let item = `${rule.rule} ${rule.host}`;
         ret.push(item);
     });
     return ret;
 };
 
-var clearWhistleHeaders = function clearWhistleHeaders(headers, options) {
-    var result = {};
+const clearWhistleHeaders = (headers, options) => {
+    const result = {};
     if (!headers) {
         return result;
     }
     if (!options) {
         return Object.assign({}, headers);
     }
-    var removeHeaders = {};
-    Object.keys(options).forEach(function (key) {
-        return removeHeaders[options[key]] = 1;
-    });
-    Object.keys(headers).forEach(function (name) {
+    const removeHeaders = {};
+    Object.keys(options).forEach(key => removeHeaders[options[key]] = 1);
+    Object.keys(headers).forEach((name) => {
         if (!removeHeaders[name]) {
             result[name] = headers[name];
         }
@@ -47,23 +39,22 @@ var clearWhistleHeaders = function clearWhistleHeaders(headers, options) {
     return result;
 };
 
-exports.request = function (ctx, opts) {
+exports.request = (ctx, opts) => {
     opts = opts || {};
-    var req = ctx.req;
-
-    var options = parseurl(req);
+    const { req } = ctx;
+    const options = parseurl(req);
     options.followRedirect = req.followRedirect || false;
     options.headers = clearWhistleHeaders(req.headers, ctx.options);
     options.method = req.method;
     options.body = req;
     delete options.protocol;
     options.uri = ctx.fullUrl;
-    var r = request;
+    let r = request;
     if (opts.proxyUrl) {
         console.log('有proxyUrl');
         r = request.defaults({ proxy: opts.proxyUrl });
     } else if (opts.host || options.port > 0) {
-        var uri = urlParse(ctx.fullUrl);
+        const uri = urlParse(ctx.fullUrl);
         options.uri = uri;
         if (opts.host) {
             uri.hostname = opts.host;
@@ -79,21 +70,16 @@ exports.request = function (ctx, opts) {
         options.body = req.body;
     }
     options.encoding = null;
-    var transform = new PassThrough();
-    return new Promise(function (resolve, reject) {
+    const transform = new PassThrough();
+    return new Promise((resolve, reject) => {
         delete options.headers['content-length'];
         delete options.headers['transfer-encoding'];
         console.log('options: ', options);
-        var res = r(options);
+        const res = r(options);
         res.pipe(transform);
         res.on('error', reject);
-        res.on('response', function (_ref) {
-            var statusCode = _ref.statusCode,
-                headers = _ref.headers;
-
-            res.on('error', function (err) {
-                return transform.emit('error', err);
-            });
+        res.on('response', ({ statusCode, headers }) => {
+            res.on('error', err => transform.emit('error', err));
             transform.statusCode = statusCode;
             transform.headers = headers;
             resolve(transform);

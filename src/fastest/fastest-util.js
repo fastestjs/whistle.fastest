@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 判断是否为 IP 地址
  *
@@ -7,7 +5,7 @@
  * @return {Boolean}
  */
 function isIP(str) {
-    var regIP = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+    const regIP = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 
     return !!regIP.test(str);
 }
@@ -18,7 +16,7 @@ function isIP(str) {
  * @return {Object}
  */
 function parseWhistleRule(rule) {
-    var arr = rule.trim().split(/\s+/);
+    const arr = rule.trim().split(/\s+/);
 
     // TODO 这种解析方式可能存在问题，需要去查阅下 whistle 本身是怎么解析的
     return {
@@ -28,6 +26,6 @@ function parseWhistleRule(rule) {
 }
 
 module.exports = {
-    isIP: isIP,
-    parseWhistleRule: parseWhistleRule
+    isIP,
+    parseWhistleRule
 };

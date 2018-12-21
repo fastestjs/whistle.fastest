@@ -1,55 +1,44 @@
-'use strict';
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var parseurl = require('parseurl');
-var zlib = require('zlib');
-var request = require('request');
-var urlParse = require('url').parse;
-
-var _require = require('stream'),
-    PassThrough = _require.PassThrough;
-
-var _require2 = require('events'),
-    EventEmitter = _require2.EventEmitter;
-
-var dataSource = require('./dataSource');
+const parseurl = require('parseurl');
+const zlib = require('zlib');
+const request = require('request');
+const urlParse = require('url').parse;
+const { PassThrough } = require('stream');
+const { EventEmitter } = require('events');
+const dataSource = require('./dataSource');
 
 exports.resHeaders = Symbol('resHeaders');
 exports.resRawHeaders = Symbol('resRawHeaders');
-exports.isFunction = function (fn) {
-    return typeof fn === 'function';
-};
-exports.noop = function () {};
-var getCharset = function getCharset(headers) {
+exports.isFunction = fn => typeof fn === 'function';
+exports.noop = () => {};
+const getCharset = (headers) => {
     if (/charset=([^\s]+)/.test(headers['content-type'])) {
         return RegExp.$1;
     }
     return 'utf8';
 };
 exports.getCharset = getCharset;
-exports.isText = function (headers) {
-    var type = headers['content-type'];
+exports.isText = (headers) => {
+    const type = headers['content-type'];
     return !type || /javascript|css|html|json|xml|application\/x-www-form-urlencoded|text\//i.test(type);
 };
 
-var HOST_RE = /^([\w-]+)(?::(\d+))?$/;
-var parseHost = function parseHost(host) {
+const HOST_RE = /^([\w-]+)(?::(\d+))?$/;
+const parseHost = (host) => {
     if (HOST_RE.test(host)) {
         return {
             host: RegExp.$1,
-            port: RegExp.$2
+            port: RegExp.$2,
         };
     }
 };
-var parseOptions = function parseOptions(options) {
+const parseOptions = (options) => {
     if (!options) {
         return {};
     }
     if (HOST_RE.test(options)) {
         return {
             host: RegExp.$1,
-            port: RegExp.$2
+            port: RegExp.$2,
         };
     }
     if (typeof options === 'string') {
@@ -62,25 +51,24 @@ var parseOptions = function parseOptions(options) {
     if (!options.host || typeof options.host !== 'string') {
         delete options.host;
     }
-    var proxyUrl = options.proxyUrl;
-
+    let { proxyUrl } = options;
     delete options.proxyUrl;
     if (proxyUrl && typeof proxyUrl === 'string') {
         proxyUrl = proxyUrl.replace(/^[^/]*:\/\/|\s+|\/.*$/g, '');
-        options.proxyUrl = proxyUrl && 'http://' + proxyUrl;
+        options.proxyUrl = proxyUrl && `http://${proxyUrl}`;
     }
     return options;
 };
 exports.parseOptions = parseOptions;
 
-var getValueFromHeaders = function getValueFromHeaders(headers, name) {
+const getValueFromHeaders = (headers, name) => {
     name = headers[name];
     return name ? decodeURIComponent(name) : '';
 };
 exports.getValueFromHeaders = getValueFromHeaders;
 
-var getRuleValue = function getRuleValue(headers, options) {
-    var value = headers[options.RULE_VALUE_HEADER];
+const getRuleValue = (headers, options) => {
+    const value = headers[options.RULE_VALUE_HEADER];
     if (!value) {
         return;
     }
@@ -88,19 +76,17 @@ var getRuleValue = function getRuleValue(headers, options) {
 };
 
 exports.getRuleValue = getRuleValue;
-var clearWhistleHeaders = function clearWhistleHeaders(headers, options) {
-    var result = {};
+const clearWhistleHeaders = (headers, options) => {
+    const result = {};
     if (!headers) {
         return result;
     }
     if (!options) {
         return Object.assign({}, headers);
     }
-    var removeHeaders = {};
-    Object.keys(options).forEach(function (key) {
-        return removeHeaders[options[key]] = 1;
-    });
-    Object.keys(headers).forEach(function (name) {
+    const removeHeaders = {};
+    Object.keys(options).forEach(key => removeHeaders[options[key]] = 1);
+    Object.keys(headers).forEach((name) => {
         if (!removeHeaders[name]) {
             result[name] = headers[name];
         }
@@ -109,22 +95,21 @@ var clearWhistleHeaders = function clearWhistleHeaders(headers, options) {
 };
 exports.clearWhistleHeaders = clearWhistleHeaders;
 
-exports.request = function (ctx, opts) {
+exports.request = (ctx, opts) => {
     opts = opts || {};
-    var req = ctx.req;
-
-    var options = parseurl(req);
+    const { req } = ctx;
+    const options = parseurl(req);
     options.followRedirect = req.followRedirect || false;
     options.headers = clearWhistleHeaders(req.headers, ctx.options);
     options.method = req.method;
     options.body = req;
     delete options.protocol;
     options.uri = ctx.fullUrl;
-    var r = request;
+    let r = request;
     if (opts.proxyUrl) {
         r = request.defaults({ proxy: opts.proxyUrl });
     } else if (opts.host || options.port > 0) {
-        var uri = urlParse(ctx.fullUrl);
+        const uri = urlParse(ctx.fullUrl);
         options.uri = uri;
         if (opts.host) {
             uri.hostname = opts.host;
@@ -140,29 +125,24 @@ exports.request = function (ctx, opts) {
         options.body = req.body;
     }
     options.encoding = null;
-    var transform = new PassThrough();
-    return new Promise(function (resolve, reject) {
+    const transform = new PassThrough();
+    return new Promise((resolve, reject) => {
         delete options.headers['content-length'];
         delete options.headers['transfer-encoding'];
-        var res = r(options);
+        const res = r(options);
         res.pipe(transform);
         res.on('error', reject);
-        res.on('response', function (_ref) {
-            var statusCode = _ref.statusCode,
-                headers = _ref.headers;
-
-            res.on('error', function (err) {
-                return transform.emit('error', err);
-            });
+        res.on('response', ({ statusCode, headers }) => {
+            res.on('error', err => transform.emit('error', err));
             transform.statusCode = statusCode;
             transform.headers = headers;
             resolve(transform);
         });
     });
 };
-var unzipBody = function unzipBody(headers, body, callback) {
-    var unzip = void 0;
-    var encoding = headers['content-encoding'];
+const unzipBody = (headers, body, callback) => {
+    let unzip;
+    let encoding = headers['content-encoding'];
     if (body && typeof encoding === 'string') {
         encoding = encoding.trim().toLowerCase();
         if (encoding === 'gzip') {
@@ -174,7 +154,7 @@ var unzipBody = function unzipBody(headers, body, callback) {
     if (!unzip) {
         return callback(null, body);
     }
-    unzip(body, function (err, data) {
+    unzip(body, (err, data) => {
         if (err) {
             return zlib.inflateRaw(body, callback);
         }
@@ -182,14 +162,14 @@ var unzipBody = function unzipBody(headers, body, callback) {
     });
 };
 
-exports.getStreamBuffer = function (stream) {
-    return new Promise(function (resolve, reject) {
-        var buffer = void 0;
-        stream.on('data', function (data) {
+exports.getStreamBuffer = (stream) => {
+    return new Promise((resolve, reject) => {
+        let buffer;
+        stream.on('data', (data) => {
             buffer = buffer ? Buffer.concat([buffer, data]) : data;
         });
-        stream.on('end', function () {
-            unzipBody(stream.headers, buffer, function (err, data) {
+        stream.on('end', () => {
+            unzipBody(stream.headers, buffer, (err, data) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -201,33 +181,33 @@ exports.getStreamBuffer = function (stream) {
     });
 };
 
-exports.setupContext = function (ctx, options) {
+exports.setupContext = (ctx, options) => {
     ctx.options = options;
     ctx.reqOptions = parseurl(ctx.req);
-    var fullUrl = getValueFromHeaders(ctx.headers, options.FULL_URL_HEADER);
+    const fullUrl = getValueFromHeaders(ctx.headers, options.FULL_URL_HEADER);
     ctx.fullUrl = fullUrl;
 };
 
-exports.responseRules = function (ctx) {
+exports.responseRules = (ctx) => {
     if (!ctx.body && (ctx.rules || ctx.values)) {
         ctx.body = {
-            rules: Array.isArray(ctx.rules) ? ctx.rules.join('\n') : '' + ctx.rules,
-            values: ctx.values
+            rules: Array.isArray(ctx.rules) ? ctx.rules.join('\n') : `${ctx.rules}`,
+            values: ctx.values,
         };
     }
 };
 
-exports.getDataSource = function () {
-    var ds = new EventEmitter();
-    var handleData = function handleData(type, args) {
-        ds.emit.apply(ds, [type].concat(_toConsumableArray(args)));
+exports.getDataSource = () => {
+    const ds = new EventEmitter();
+    const handleData = (type, args) => {
+        ds.emit(type, ...args);
     };
     dataSource.on('data', handleData);
     return {
         dataSource: ds,
-        clearup: function clearup() {
+        clearup: () => {
             dataSource.removeListener('data', handleData);
             ds.removeAllListeners();
-        }
+        },
     };
 };
