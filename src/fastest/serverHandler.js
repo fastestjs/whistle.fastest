@@ -66,16 +66,14 @@ exports.handleRequest = async (ctx, next) => {
     // https://github.com/whistle-plugins/whistle.script#%E6%93%8D%E4%BD%9C%E8%AF%B7%E6%B1%82
     console.log('handleRequest start', ctx.fullUrl);
 
+    // 创建 fastest
     const fastest = new Fastest(ctx.options.proxyEnv, ctx);
 
-    // 获取本次的请求该如何转发
-    const recoverRequestResult = await fastest.recoverRequest();
-    console.log('--recoverRequestResult--', recoverRequestResult);
+    // 处理本次请求，分析并获取请求转发的参数
+    const proxyRequestOpts = await fastest.proxyRequest();
+    console.log('--proxyRequestOpts--', proxyRequestOpts);
 
-    // 重要: fullUrl 一定要修改，因为后续 urlParse 的时候是拿这个值处理的
-    ctx.fullUrl = recoverRequestResult.fullUrl;
-
-    // 重要: 一定要设置使用 whistle 的代理，否则转发了请求之后，就无法真正获得测试环境的数据了
+    // 发送转发请求，注意一定要设置好代理
     const { headers } = await next({ proxyUrl: fastest.proxyEnv.whistleServer });
 
     // ---------------------------------------------------------------------------
