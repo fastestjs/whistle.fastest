@@ -4,11 +4,7 @@ const util = require('./whistle-util');
 module.exports = (server, options) => {
     const app = new Koa();
 
-    app.use(async (ctx, next) => {
-        console.log('-------rulesServer.js start', ctx.fullUrl, ctx.request.header);
-        // console.log('-------rulesServer.js start typeof next', typeof next);
-        // console.log('-------rulesServer.js start options', options);
-
+    app.use(async (ctx) => {
         // 从 ctx 和 options 中获取并设置相关信息
         util.setupContext(ctx, options);
 
@@ -33,7 +29,7 @@ module.exports = (server, options) => {
         const { handleRequestRules } = require('./fastest/rulesServerHandler');
 
         // 处理规则
-        await handleRequestRules(ctx, next);
+        await handleRequestRules(ctx);
 
         // 设置规则
         util.responseRules(ctx);

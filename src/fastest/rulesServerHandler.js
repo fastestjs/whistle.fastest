@@ -1,13 +1,12 @@
-const ProxyEnv = require('./fastest/ProxyEnv');
+const ProxyEnv = require('./ProxyEnv');
 
 //  如果Node >= 7.6，可以采用async await的方式
-exports.handleRequestRules = async (ctx, next) => {
+exports.handleRequestRules = async (ctx) => {
     // https://github.com/whistle-plugins/whistle.script#%E8%AE%BE%E7%BD%AE%E8%A7%84%E5%88%99
     console.log('handleRequestRules start', ctx.fullUrl, ctx.request.header);
-    console.log('handleRequestRules start typeof next', typeof next);
 
     // 模拟请求了配置管理页的数据
-    const fastestEnvData = require('../mock/data1');
+    const fastestEnvData = require('../../mock/data1');
 
     // 获得当前的 fastest 配置参数
     const proxyEnv = new ProxyEnv(fastestEnvData);
