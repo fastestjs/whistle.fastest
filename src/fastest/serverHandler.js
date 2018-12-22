@@ -1,7 +1,6 @@
 const fastestUtil = require('./fastest-util');
 const Fastest = require('./Fastest');
 
-//  如果Node >= 7.6，可以采用async await的方式
 exports.handleRequest = async (ctx, next) => {
     // https://github.com/whistle-plugins/whistle.script#%E6%93%8D%E4%BD%9C%E8%AF%B7%E6%B1%82
     console.log('handleRequest start', ctx.fullUrl);
@@ -11,7 +10,7 @@ exports.handleRequest = async (ctx, next) => {
 
     // 处理本次请求，分析并获取请求转发的参数
     const proxyRequestOpts = await fastest.proxyRequest();
-    console.log('--proxyRequestOpts--', proxyRequestOpts);
+    // console.log('--proxyRequestOpts--', proxyRequestOpts);
 
     // 重要 fullUrl 一定要修改，因为后续 whistle 在调用 urlParse 方法时是拿这个值处理的
     ctx.fullUrl = proxyRequestOpts.fullUrl;

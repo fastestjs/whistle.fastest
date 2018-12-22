@@ -8,6 +8,9 @@ module.exports = (server, options) => {
         // 从 ctx 和 options 中获取并设置相关信息
         util.setupContext(ctx, options);
 
+        // fastest://ruleValue
+        // console.log(ctx.req.originalReq.ruleValue)
+
         // ctx.fullUrl = http://fastest2.now.qq.com/demo/ivweb-startkit/index.html?now_n_http=1&_fst_idx=37
         // ctx.reqOptions = {
         //     protocol: null,
