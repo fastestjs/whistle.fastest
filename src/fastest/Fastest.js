@@ -1,7 +1,6 @@
 const fastestProxy = require('./fastest-proxy');
 const fastestUtil = require('./fastest-util');
 const ProxyRequestOpts = require('./ProxyRequestOpts');
-
 const { PROXY_TYPE } = require('./ProxyRule');
 
 class Fastest {

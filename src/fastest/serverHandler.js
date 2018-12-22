@@ -33,7 +33,7 @@ exports.handleRequest = async (ctx, next) => {
         ctx.body = rewriteHtml.body; // 修改响应内容
 
         // 可以设置一些自定义的响应头
-        ctx.set(ctx.header);
+        ctx.set(rewriteHtml.header);
     }
 
     // TODO 需要修改 js 文件所有请求 now.qq.com 中的地址为 fastest2.now.qq.com
