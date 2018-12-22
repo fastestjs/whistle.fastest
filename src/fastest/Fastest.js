@@ -1,24 +1,8 @@
 const fastestProxy = require('./fastest-proxy');
+const fastestUtil = require('./util');
+const ProxyRequestOpts = require('./ProxyRequestOpts');
 
 const { PROXY_TYPE } = require('./ProxyRule');
-
-class ProxyRequestOpts {
-    constructor(host, url) {
-        this.host = host;
-        this.url = url;
-        this.fullUrl = this._getFullUrl();
-    }
-
-    update(data = {}) {
-        this.host = data.host || this.host;
-        this.url = data.url || this.url;
-        this.fullUrl = this._getFullUrl();
-    }
-
-    _getFullUrl() {
-        return `http://${this.host}${this.url}`;
-    }
-}
 
 class Fastest {
     constructor(proxyEnv, ctx) {
@@ -59,10 +43,10 @@ class Fastest {
         return new Promise((resolve, reject) => {
             const { proxyDomain, rules } = this.proxyEnv;
 
-            // html 文件内容
+            // 1. 获取 html 文件内容
             let newHtmlContent = htmlContent;
 
-            // 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
+            // 2. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
             for (let i = 0; i < rules.length; i++) {
                 let rule = rules[i];
 
@@ -77,11 +61,11 @@ class Fastest {
                 // TODO 要考虑请求转发的场景
             }
 
-            // 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
-            newHtmlContent = newHtmlContent.replace(/\s+integrity="[^"]*"/gi, '');
+            // 3. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
+            newHtmlContent = fastestUtil.removeIntegrityForHtml(newHtmlContent);
 
-            //------------end 修改 html 文件的内容---------------
 
+            // 4. 返回
             resolve({
                 body: newHtmlContent,
                 header: {

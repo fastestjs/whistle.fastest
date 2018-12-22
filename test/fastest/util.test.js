@@ -52,3 +52,28 @@ describe('./lib/fastest/util.js replaceDotToUnderline()', () => {
         expect(fastestUtil.replaceDotToUnderline('now.qq.com/cgi-bin')).to.equal('now_qq_com/cgi-bin');
     });
 });
+
+describe('./lib/fastest/util.js removeIntegrityForHtml()', () => {
+    it('contain integrity ', () => {
+        let htmlContent = '<script type="text/javascript" src="./index.js" integrity="sha256-4HCvnM9yevyLsSI1LV4kuQsOEDkEX7+A13v8ll1yBFg= sha384-uHbkdqrH3SgKZDm8WRtFMC2YTKOgaVC5pUAs9oOLQxPCjTcuzIB25WulgXQpdCN0" crossorigin="anonymous"></script>';
+        let result = '<script type="text/javascript" src="./index.js" crossorigin="anonymous"></script>';
+        expect(fastestUtil.removeIntegrityForHtml(htmlContent)).to.equal(result);
+    });
+
+    it('contain integrity and end', () => {
+        let htmlContent = '<script type="text/javascript" src="./index.js" integrity="sha256-4HCvnM9yevyLsSI1LV4kuQsOEDkEX7+A13v8ll1yBFg= sha384-uHbkdqrH3SgKZDm8WRtFMC2YTKOgaVC5pUAs9oOLQxPCjTcuzIB25WulgXQpdCN0"></script>';
+        let result = '<script type="text/javascript" src="./index.js"></script>';
+        expect(fastestUtil.removeIntegrityForHtml(htmlContent)).to.equal(result);
+    });
+
+    it('contain integrity and exist two script', () => {
+        let htmlContent = '<script type="text/javascript" src="./index.js" integrity="sha256-4HCvnM9yevyLsSI1LV4kuQsOEDkEX7+A13v8ll1yBFg= sha384-uHbkdqrH3SgKZDm8WRtFMC2YTKOgaVC5pUAs9oOLQxPCjTcuzIB25WulgXQpdCN0"></script>';
+        let result = '<script type="text/javascript" src="./index.js"></script>';
+        expect(fastestUtil.removeIntegrityForHtml(htmlContent + htmlContent)).to.equal(result + result);
+    });
+
+    it('no integrity', () => {
+        let htmlContent = '<script type="text/javascript" src="./index.js"></script>';
+        expect(fastestUtil.removeIntegrityForHtml(htmlContent)).to.equal(htmlContent);
+    });
+});

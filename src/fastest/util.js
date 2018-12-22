@@ -45,9 +45,20 @@ function replaceDotToUnderline(str) {
     return str.replace(/\./gi, '_');
 }
 
+/**
+ * 从 HTML 中去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
+ *
+ * @param {String} htmlContent
+ * @return {String}
+ */
+function removeIntegrityForHtml(htmlContent) {
+    return htmlContent.replace(/\s+integrity="[^"]*"/gi, '');
+}
+
 module.exports = {
     isIP,
     parseWhistleRule,
     isHTML,
-    replaceDotToUnderline
+    replaceDotToUnderline,
+    removeIntegrityForHtml
 };
