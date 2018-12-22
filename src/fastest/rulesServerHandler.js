@@ -9,7 +9,7 @@ exports.handleRequestRules = async (ctx) => {
     const fastestEnvData = require('../../mock/data1');
 
     // 获得当前的 fastest 配置参数
-    const proxyEnv = new ProxyEnv(fastestEnvData);
+    const proxyEnv = new ProxyEnv(fastestEnvData.result);
 
     // 完整的规则
     ctx.rules = [
