@@ -10,16 +10,6 @@ const pattern1 = '11.url.cn';
 const pattern2 = 'now.qq.com';
 const pattern3 = 'now.qq.com/cgi-bin';
 
-describe('./lib/fastest/fastest-proxy.js replaceDotToUnderline()', () => {
-    it('11.url.cn should return 11_url_cn', () => {
-        expect(fastestProxy.replaceDotToUnderline('11.url.cn')).to.equal('11_url_cn');
-    });
-
-    it('now.qq.com/cgi-bin should return now_qq_com/cgi-bin', () => {
-        expect(fastestProxy.replaceDotToUnderline('now.qq.com/cgi-bin')).to.equal('now_qq_com/cgi-bin');
-    });
-});
-
 describe('./lib/fastest/fastest-proxy.js isMatchVHost()', () => {
     it('check url1 & pattern1 should return true', () => {
         expect(fastestProxy.isMatchVHost(url1, pattern1)).to.be.true;

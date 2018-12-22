@@ -1,6 +1,4 @@
-'use strict';
-
-var fastestUtil = require('./fastest-util');
+const fastestUtil = require('./fastest-util');
 
 /**
  * 判断该请求地址是不是已经使用了 host 重写了请求。
@@ -13,7 +11,7 @@ var fastestUtil = require('./fastest-util');
  * @return {Boolean}
  */
 function isMatchVHost(requestUrl, pattern) {
-    return !!requestUrl.match(new RegExp('vhost/' + fastestUtil.replaceDotToUnderline(pattern) + '/vhost/'));
+    return !!requestUrl.match(new RegExp(`vhost/${fastestUtil.replaceDotToUnderline(pattern)}/vhost/`));
 }
 
 /**
@@ -24,7 +22,7 @@ function isMatchVHost(requestUrl, pattern) {
  * @return {String}
  */
 function removeVHost(requestUrl, pattern) {
-    return requestUrl.replace(new RegExp('vhost/' + fastestUtil.replaceDotToUnderline(pattern) + '/vhost/', 'gi'), '');
+    return requestUrl.replace(new RegExp(`vhost/${fastestUtil.replaceDotToUnderline(pattern)}/vhost/`, 'gi'), '');
 }
 
 /**
@@ -36,11 +34,11 @@ function removeVHost(requestUrl, pattern) {
  * @return {String}
  */
 function addVHost(content, pattern, testDomain) {
-    return content.replace(new RegExp(pattern, 'gi'), testDomain + '/vhost/' + fastestUtil.replaceDotToUnderline(pattern) + '/vhost');
+    return content.replace(new RegExp(pattern, 'gi'), `${testDomain}/vhost/${fastestUtil.replaceDotToUnderline(pattern)}/vhost`);
 }
 
 module.exports = {
-    isMatchVHost: isMatchVHost,
-    removeVHost: removeVHost,
-    addVHost: addVHost
+    isMatchVHost,
+    removeVHost,
+    addVHost
 };

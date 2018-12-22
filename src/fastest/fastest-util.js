@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * 判断是否为 IP 地址
  *
@@ -7,7 +5,7 @@
  * @return {Boolean}
  */
 function isIP(str) {
-    var regIP = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+    const regIP = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 
     return !!regIP.test(str);
 }
@@ -17,10 +15,8 @@ function isIP(str) {
  * @param {String} rule 规则
  * @return {Object}
  */
-function parseWhistleRule() {
-    var rule = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-    var arr = rule.trim().split(/\s+/);
+function parseWhistleRule(rule = '') {
+    const arr = rule.trim().split(/\s+/);
 
     // TODO 这种解析方式可能存在问题，需要去查阅下 whistle 本身是怎么解析的
     return {
@@ -33,9 +29,7 @@ function parseWhistleRule() {
  * 根据 content-type 来判断是否HTML响应
  * @param {String} contentType
  */
-function isHTML() {
-    var contentType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
+function isHTML(contentType = '') {
     return new RegExp('text/html', 'gi').test(contentType);
 }
 
@@ -62,9 +56,9 @@ function removeIntegrityForHtml(htmlContent) {
 }
 
 module.exports = {
-    isIP: isIP,
-    parseWhistleRule: parseWhistleRule,
-    isHTML: isHTML,
-    replaceDotToUnderline: replaceDotToUnderline,
-    removeIntegrityForHtml: removeIntegrityForHtml
+    isIP,
+    parseWhistleRule,
+    isHTML,
+    replaceDotToUnderline,
+    removeIntegrityForHtml
 };
