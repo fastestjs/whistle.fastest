@@ -26,3 +26,19 @@ describe('./lib/fastest/util.js isHTML()', () => {
         expect(fastestUtil.isHTML('image/webp')).to.be.false;
     });
 });
+
+describe('./lib/fastest/util.js parseWhistleRule()', () => {
+    it('check: now.qq.com 10.100.20.4', () => {
+        expect(fastestUtil.parseWhistleRule('now.qq.com 10.100.20.4')).to.eql({
+            pattern: 'now.qq.com',
+            operatorURI: '10.100.20.4'
+        });
+    });
+
+    it('check: now.qq.com/cgi-bin     10.100.20.4', () => {
+        expect(fastestUtil.parseWhistleRule('now.qq.com/cgi-bin      10.100.20.4')).to.eql({
+            pattern: 'now.qq.com/cgi-bin',
+            operatorURI: '10.100.20.4'
+        });
+    });
+});

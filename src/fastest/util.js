@@ -15,7 +15,7 @@ function isIP(str) {
  * @param {String} rule 规则
  * @return {Object}
  */
-function parseWhistleRule(rule) {
+function parseWhistleRule(rule = '') {
     const arr = rule.trim().split(/\s+/);
 
     // TODO 这种解析方式可能存在问题，需要去查阅下 whistle 本身是怎么解析的
