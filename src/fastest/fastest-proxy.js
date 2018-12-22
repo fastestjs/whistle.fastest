@@ -1,4 +1,4 @@
-const fastestUtil = require('./fastest-util');
+const fastestUtil = require('./util');
 
 /**
  * 将点号替换为下划线。
