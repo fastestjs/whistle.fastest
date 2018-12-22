@@ -2,7 +2,7 @@
 
 whistle.fastest 为 [whistle](https://github.com/avwo/whistle) 的一个插件，主要用于 fastest 项目。
 
-## 特性
+## 特性
 
 whistle.fastest 主要功能点如下：
 
