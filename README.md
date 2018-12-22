@@ -29,7 +29,21 @@ $ npm install whistle.fastest -g
 在开发的时候，可以使用下面命令将本地的包软链到全局。
 
 ```bash
-sudo npm link
+npm link
+```
+
+### 构建
+
+源代码在 `src` 目录下，我们引入了 babel 来处理，使用如下命令来构建发布版本：
+
+```bash
+npm run build
+```
+
+也可使用下面的命令，当 `src` 目录下的文件有变化时会自动构建
+
+```bash
+npm run watch
 ```
 
 ### 调试插件
@@ -44,6 +58,20 @@ w2 run
 > 如果需要自定义端口，则可以使用 `w2 run -p 8080`
 
 修改插件代码后，需要触发插件项目的 package.json 修改才会重新加载该插件，比如添加或删除一个空格。
+
+### 测试用例
+
+我们为主要的操作增加了测试用例，运行下面命令可以执行测试用例：
+
+```bash
+npm test
+```
+
+### 备注
+
+本扩展插件是在 [whistle.script文档](https://github.com/whistle-plugins/whistle.script) 的基础上的简化定制版本。
+
+> 一开始我们想直接使用 whistle.script ，但是发现请求量大的时候可能会导致 whistle 崩溃，原因未知，可能与其实现上过于复杂导致。
 
 ## 参考文档
 

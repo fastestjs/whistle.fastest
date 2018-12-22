@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const util = require('./whistle-util');
+const util = require('./util');
 
 module.exports = (server, options) => {
     const app = new Koa();

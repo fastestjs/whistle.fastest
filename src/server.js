@@ -2,7 +2,7 @@ const Koa = require('koa');
 const onerror = require('koa-onerror');
 const qs = require('querystring');
 const iconv = require('iconv-lite');
-const util = require('./whistle-util');
+const util = require('./util');
 
 const body = Symbol('body');
 const text = Symbol('text');
