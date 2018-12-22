@@ -19,10 +19,10 @@ class Fastest {
             const requestUrl = this.ctx.request.url;
             const { originDomain, rules } = this.proxyEnv;
 
-            // 请求转发参数
+            // 1. 获取请求转发参数
             let proxyRequestOpts = new ProxyRequestOpts(originDomain, requestUrl);
 
-            // 从规则中寻找，如果本次请求链接中有符合转发标记的，则将其请求修改转发
+            // 2. 从规则中寻找，如果本次请求链接中有符合转发标记的，则将其请求修改转发
             for (let i = 0; i < rules.length; i++) {
                 let rule = rules[i];
 
@@ -35,10 +35,16 @@ class Fastest {
                 // TODO 要考虑请求转发的场景
             }
 
+            // 3. 返回结果
             resolve(proxyRequestOpts);
         });
     }
 
+    /**
+     * 获取重写 html 内容的结果
+     * @param {String} htmlContent html 中内容
+     * @return {Promise<any>}
+     */
     getRewriteHtml(htmlContent) {
         return new Promise((resolve, reject) => {
             const { proxyDomain, rules } = this.proxyEnv;
@@ -63,7 +69,6 @@ class Fastest {
 
             // 3. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
             newHtmlContent = fastestUtil.removeIntegrityForHtml(newHtmlContent);
-
 
             // 4. 返回
             resolve({
