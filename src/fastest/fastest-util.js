@@ -25,7 +25,35 @@ function parseWhistleRule(rule) {
     };
 }
 
+// /**
+//  * 判断响应头是否图片请求
+//  * @param {Object} res
+//  */
+// let isImage = (text) => {
+//     let imgTypes = CONFIG.imageHeaderTypes;
+//     let contentType = text;
+//     let ret = false;
+//
+//     imgTypes.forEach((item, idx) => {
+//         let reg = new RegExp(`${item}`, 'g');
+//         if(reg.test(contentType)) {
+//             ret = true;
+//         }
+//     });
+//
+//     return ret;
+// }
+
+/**
+ * 根据 content-type 来判断是否HTML响应
+ * @param {String} contentType
+ */
+function isHTML(contentType = '') {
+    return new RegExp('text/html', 'gi').test(contentType);
+}
+
 module.exports = {
     isIP,
-    parseWhistleRule
+    parseWhistleRule,
+    isHTML
 };

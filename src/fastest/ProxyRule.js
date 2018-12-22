@@ -54,6 +54,12 @@ class ProxyRule {
         this.operatorURI = data.host;
 
         /**
+         * 代理类型
+         * @type {Object}
+         */
+        this.proxyType = data.proxy_type;
+
+        /**
          * 规则类型
          * @type {Object}
          */
@@ -66,7 +72,7 @@ class ProxyRule {
         this.isDisable = !!data.status || false;
     }
 
-    isProxyTypeOfHost(url) {
+    matchProxyTypeOfHost(url) {
         return fastestProxy.isMatchVHost(url, this.pattern);
     }
 
@@ -77,6 +83,12 @@ class ProxyRule {
             url: fastestProxy.removeVHost(url, this.pattern)
         };
     }
+
+    isProxyTypeOfHost() {
+        return this.proxyType === PROXY_TYPE.HOST;
+    }
 }
+
+ProxyRule.PROXY_TYPE = PROXY_TYPE;
 
 module.exports = ProxyRule;

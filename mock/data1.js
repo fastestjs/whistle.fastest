@@ -10,16 +10,19 @@ module.exports = {
         rules: [
             {
                 type: 1,
+                proxy_type: 1,
                 rule: 'now.qq.com',
                 host: '10.100.64.201',
                 status: 1
             }, {
                 type: 2,
+                proxy_type: 1,
                 rule: 'now.qq.com/cgi-bin',
                 host: '10.100.64.201',
                 status: 1
             }, {
                 type: 1,
+                proxy_type: 1,
                 rule: '11.url.cn',
                 host: '10.100.64.201',
                 status: 1
