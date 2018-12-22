@@ -1,4 +1,4 @@
-const fastestUtil = require('./util');
+const fastestUtil = require('./fastest-util');
 const Fastest = require('./Fastest');
 
 exports.handleRequest = async (ctx, next) => {

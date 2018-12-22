@@ -1,4 +1,4 @@
-const fastestUtil = require('./util');
+const fastestUtil = require('./fastest-util');
 
 /**
  * 判断该请求地址是不是已经使用了 host 重写了请求。

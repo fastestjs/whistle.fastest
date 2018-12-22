@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const fastestUtil = require('../../lib/fastest/util');
+const fastestUtil = require('../../lib/fastest/fastest-util');
 
 describe('./lib/fastest/util.js isIP()', () => {
     it('10.100.20.4 -> true', () => {
