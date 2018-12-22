@@ -42,3 +42,13 @@ describe('./lib/fastest/util.js parseWhistleRule()', () => {
         });
     });
 });
+
+describe('./lib/fastest/util.js replaceDotToUnderline()', () => {
+    it('11.url.cn should return 11_url_cn', () => {
+        expect(fastestUtil.replaceDotToUnderline('11.url.cn')).to.equal('11_url_cn');
+    });
+
+    it('now.qq.com/cgi-bin should return now_qq_com/cgi-bin', () => {
+        expect(fastestUtil.replaceDotToUnderline('now.qq.com/cgi-bin')).to.equal('now_qq_com/cgi-bin');
+    });
+});
