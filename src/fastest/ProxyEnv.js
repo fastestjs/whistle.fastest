@@ -41,6 +41,12 @@ class ProxyEnv {
         this.rules = this._getRules(data.rules);
     }
 
+    formatRules() {
+        return this.rules.map(rule => {
+            return `${rule.pattern} ${rule.operatorURI}`;
+        });
+    }
+
     _getRules(ruleList = []) {
         return ruleList.map((rule) => {
             return new ProxyRule(rule);
