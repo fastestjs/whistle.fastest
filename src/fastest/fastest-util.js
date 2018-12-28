@@ -55,10 +55,41 @@ function removeIntegrityForHtml(htmlContent) {
     return htmlContent.replace(/\s+integrity="[^"]*"/gi, '');
 }
 
+/**
+ * 从URL中获取参数对应的值
+ *
+ * @param {String} name 参数名
+ * @param {String} url
+ * @return {String}
+ */
+function getParamFromURL(name, url) {
+    //参数：变量名，url为空则直接返回
+    if (!name || !url) {
+        return '';
+    }
+
+    let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    let r = url.substr(url.indexOf('\?') + 1).match(reg);
+
+    return r != null ? r[2] : '';
+}
+
+/**
+ * 获取 uin
+ *
+ * @param {String} uinFromCookie cookie里面的 uin 值，可能为: o123456
+ * @return {Number}
+ */
+function getUin(uinFromCookie) {
+    return uinFromCookie && parseInt(uinFromCookie.replace(/\D/g, ''), 10) || 0;
+}
+
 module.exports = {
     isIP,
     parseWhistleRule,
     isHTML,
     replaceDotToUnderline,
-    removeIntegrityForHtml
+    removeIntegrityForHtml,
+    getParamFromURL,
+    getUin
 };
