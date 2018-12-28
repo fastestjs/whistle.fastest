@@ -47,24 +47,27 @@ exports.handleRequest = async (ctx, next) => {
     // 设置当次请求的结果
     fastest.setSvrRes(svrRes);
 
-    // 修改 html 文件，包括静态资源等路径修改
-    if (fastest.isHTML()) {
+    // 修改 html/js/css 文件，包括静态资源等路径修改
+    if (fastest.isHTML() || fastest.isJavaScript() || fastest.isCss()) {
+        console.log(fastest.getContentType(), '====isHTML or isJavaScript or isCss=======');
+
         // 获取HTML文件内容
-        const htmlContent = await ctx.getResText();
+        const content = await ctx.getResText();
+
+        // html 和静态文件处理不一样
+        const callRewrite = (fastest.isHTML() ? fastest.getRewriteHtml : fastest.getRewriteStatic).bind(fastest);
 
         // 获取改写后的结果
-        const rewriteHtml = await fastest.getRewriteHtml(htmlContent, ctx);
+        const rewriteResult = await callRewrite(content, ctx);
 
         // 修改响应内容
-        ctx.body = rewriteHtml.body; // 修改响应内容
+        ctx.body = rewriteResult.body; // 修改响应内容
 
         // 可以设置一些自定义的响应头
-        ctx.set(rewriteHtml.header);
-    } else if (fastest.isJavaScript() || fastest.isCss()) {
-
+        ctx.set(rewriteResult.header);
+    } else {
+        console.log(fastest.getContentType(), '====other=======');
     }
-
-    // TODO 需要修改 js 文件所有请求 now.qq.com 中的地址为 fastest2.now.qq.com
 
     console.log('handleRequest end');
 };

@@ -31,18 +31,18 @@ class Fastest {
     }
 
     isHTML() {
-        return fastestUtil.isHTML(this._getContentType());
+        return fastestUtil.isHTML(this.getContentType());
     }
 
     isJavaScript() {
-        return fastestUtil.isJavaScript(this._getContentType());
+        return fastestUtil.isJavaScript(this.getContentType());
     }
 
     isCss() {
-        return fastestUtil.isCss(this._getContentType());
+        return fastestUtil.isCss(this.getContentType());
     }
 
-    _getContentType() {
+    getContentType() {
         return this.svrRes.headers['content-type'] || this.svrRes.headers['Content-Type'];
     }
 
@@ -77,34 +77,65 @@ class Fastest {
 
     /**
      * 获取重写 html 内容的结果
-     * @param {String} htmlContent html 中内容
+     *
+     * @param {String} content 文件内容
      * @return {Promise<any>}
      */
-    getRewriteHtml(htmlContent, ctx) {
+    getRewriteHtml(content, ctx) {
         return new Promise((resolve, reject) => {
             const { proxyDomain, rules } = this.proxyEnv;
 
             // 1. 获取 html 文件内容
-            let newHtmlContent = htmlContent;
+            let newContent = content;
 
             // 2. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
             for (let i = 0; i < rules.length; i++) {
                 let rule = rules[i];
 
-                newHtmlContent = fastestProxy.addVHost(newHtmlContent, rule.pattern, proxyDomain);
+                newContent = fastestProxy.addVHost(newContent, rule.pattern, proxyDomain);
             }
 
             // 3. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
-            newHtmlContent = fastestUtil.removeIntegrityForHtml(newHtmlContent);
+            newContent = fastestUtil.removeIntegrityForHtml(newContent);
 
             // 是否使用eruda
             // let useEruda = ctx.cookies.get('nowh5testErudaEnv') || 0;
 
             // 4. 返回
             resolve({
-                body: newHtmlContent,
+                body: newContent,
                 header: {
-                    'x-test': 'hello fastest'
+                    'x-test': 'html'
+                }
+            });
+        });
+    }
+
+    /**
+     * 获取重写静态资源内容的结果，例如 js 和 css
+     *
+     * @param {String} content 文件内容
+     * @return {Promise<any>}
+     */
+    getRewriteStatic(content, ctx) {
+        return new Promise((resolve, reject) => {
+            const { proxyDomain, rules } = this.proxyEnv;
+
+            // 1. 获取 html 文件内容
+            let newContent = content;
+
+            // 2. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
+            for (let i = 0; i < rules.length; i++) {
+                let rule = rules[i];
+
+                newContent = fastestProxy.addVHost(newContent, rule.pattern, proxyDomain);
+            }
+
+            // 3. 返回
+            resolve({
+                body: newContent,
+                header: {
+                    'x-test': 'static'
                 }
             });
         });
