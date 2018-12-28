@@ -27,6 +27,12 @@ module.exports = (server, options) => {
         // 从 ctx 和 options 中获取并设置相关信息
         util.setupContext(ctx, options);
 
+        // 从 url 中获取指定参数
+        // ctx.query['_fst_idx']=37
+
+        // 从 cookie 中获取指定参数
+        // ctx.cookies.get('_fst_idx')=37
+
         // Object.keys(ctx) = [ 'request',
         //   'response',
         //   'app',
