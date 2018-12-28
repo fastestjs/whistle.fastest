@@ -3,18 +3,41 @@ const fastestUtil = require('./fastest-util');
 const ProxyRequestOpts = require('./ProxyRequestOpts');
 
 class Fastest {
-    constructor(proxyEnv, ctx) {
+    constructor(proxyEnv) {
         this.proxyEnv = proxyEnv;
-        this.ctx = ctx;
+
+        // 远程请求的结果，详见 ../server.js
+        // Object.keys(svrRes) = ['_readableState',
+        //     'readable',
+        //     'domain',
+        //     '_events',
+        //     '_eventsCount',
+        //     '_maxListeners',
+        //     '_writableState',
+        //     'writable',
+        //     'allowHalfOpen',
+        //     '_transformState',
+        //     'statusCode',
+        //     'headers'];
+        this.svrRes = null;
+    }
+
+    setSvrRes(svrRes) {
+        this.svrRes = svrRes;
+    }
+
+    isHTML() {
+        return fastestUtil.isHTML(this.svrRes.headers['content-type']);
     }
 
     /**
      * 处理本次请求，分析并获取请求转发的参数
+     *
+     * @param {String} requestUrl 请求，例如 /a/b/c.html
      * @return {Promise<any>}
      */
-    proxyRequest() {
+    proxyRequest(requestUrl) {
         return new Promise((resolve, reject) => {
-            const requestUrl = this.ctx.request.url;
             const { originDomain, rules } = this.proxyEnv;
 
             // 1. 获取请求转发参数
@@ -29,8 +52,6 @@ class Fastest {
                     proxyRequestOpts.update(rule.getProxyTypeOfHostResult(proxyRequestOpts.url));
                     break;
                 }
-
-                // TODO 要考虑请求转发的场景
             }
 
             // 3. 返回结果
