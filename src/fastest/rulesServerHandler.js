@@ -35,7 +35,8 @@ exports.handleRequestRules = async (ctx) => {
 
     // 完整的规则
     ctx.rules = [
-        `/^https?://${proxyEnv.proxyDomain}/(.*\.(js|html|css|png|jpg|gif|jpeg|svg|blob|ttf|woff|woff2|mp4).*)$/ fastest://`,
+        // `/^https?://${proxyEnv.proxyDomain}/(.*\.(js|html|css|png|jpg|gif|jpeg|svg|blob|ttf|woff|woff2|mp4).*)$/ fastest://`,
+        `/^https?://${proxyEnv.proxyDomain}/(.*)/ fastest://`,
         `${proxyEnv.proxyDomain} ${proxyEnv.originDomain}`,
         ...proxyEnv.formatRules()
     ];
