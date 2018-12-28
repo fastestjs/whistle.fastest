@@ -30,3 +30,6 @@ module.exports = {
         ]
     }
 };
+
+// 如果 rule 是正则匹配
+//

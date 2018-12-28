@@ -27,7 +27,7 @@ exports.handleRequest = async (ctx, next) => {
         const resText = await ctx.getResText();
 
         // 获取改写后的结果
-        const rewriteHtml = await fastest.getRewriteHtml(resText);
+        const rewriteHtml = await fastest.getRewriteHtml(resText, ctx);
 
         // 修改响应内容
         ctx.body = rewriteHtml.body; // 修改响应内容

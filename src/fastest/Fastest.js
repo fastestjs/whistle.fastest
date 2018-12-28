@@ -1,7 +1,6 @@
 const fastestProxy = require('./fastest-proxy');
 const fastestUtil = require('./fastest-util');
 const ProxyRequestOpts = require('./ProxyRequestOpts');
-const { PROXY_TYPE } = require('./ProxyRule');
 
 class Fastest {
     constructor(proxyEnv, ctx) {
@@ -44,7 +43,7 @@ class Fastest {
      * @param {String} htmlContent html 中内容
      * @return {Promise<any>}
      */
-    getRewriteHtml(htmlContent) {
+    getRewriteHtml(htmlContent, ctx) {
         return new Promise((resolve, reject) => {
             const { proxyDomain, rules } = this.proxyEnv;
 
@@ -55,19 +54,14 @@ class Fastest {
             for (let i = 0; i < rules.length; i++) {
                 let rule = rules[i];
 
-                switch (rule.proxyType) {
-                    case PROXY_TYPE.HOST:
-                        newHtmlContent = fastestProxy.addVHost(newHtmlContent, rule.pattern, proxyDomain);
-                        break;
-                    default:
-                        break;
-                }
-
-                // TODO 要考虑请求转发的场景
+                newHtmlContent = fastestProxy.addVHost(newHtmlContent, rule.pattern, proxyDomain);
             }
 
             // 3. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
             newHtmlContent = fastestUtil.removeIntegrityForHtml(newHtmlContent);
+
+            // 是否使用eruda
+            // let useEruda = ctx.cookies.get('nowh5testErudaEnv') || 0;
 
             // 4. 返回
             resolve({
