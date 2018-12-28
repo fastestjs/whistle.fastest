@@ -27,10 +27,38 @@ function parseWhistleRule(rule = '') {
 
 /**
  * 根据 content-type 来判断是否HTML响应
+ *
+ *   text/html; charset=utf-8
+ *
  * @param {String} contentType
  */
 function isHTML(contentType = '') {
     return new RegExp('text/html', 'gi').test(contentType);
+}
+
+/**
+ * 根据 content-type 来判断是否是 js 文件
+ *
+ *   application/x-javascript
+ *   application/javascript; chareset=utf-8
+ *   text/javascript; chareset=UTF-8
+ *
+ * @param {String} contentType
+ */
+function isJavaScript(contentType = '') {
+    return new RegExp('javascript', 'gi').test(contentType);
+}
+
+/**
+ * 根据 content-type 来判断是否是 css 文件
+ *
+ *   text/css
+ *   text/css; chareset=utf-8
+ *
+ * @param {String} contentType
+ */
+function isCss(contentType = '') {
+    return new RegExp('text/css', 'gi').test(contentType);
 }
 
 /**
@@ -88,6 +116,8 @@ module.exports = {
     isIP,
     parseWhistleRule,
     isHTML,
+    isJavaScript,
+    isCss,
     replaceDotToUnderline,
     removeIntegrityForHtml,
     getParamFromURL,

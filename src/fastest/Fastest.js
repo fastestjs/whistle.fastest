@@ -3,8 +3,10 @@ const fastestUtil = require('./fastest-util');
 const ProxyRequestOpts = require('./ProxyRequestOpts');
 
 class Fastest {
-    constructor(proxyEnv) {
+    constructor(proxyEnv, opts = {}) {
         this.proxyEnv = proxyEnv;
+
+        this.opts = opts;
 
         // 远程请求的结果，详见 ../server.js
         // Object.keys(svrRes) = ['_readableState',
@@ -24,21 +26,35 @@ class Fastest {
 
     setSvrRes(svrRes) {
         this.svrRes = svrRes;
+
+        // console.log('-----', this.opts.fullUrl, this.opts.url, this.svrRes.headers);
     }
 
     isHTML() {
-        return fastestUtil.isHTML(this.svrRes.headers['content-type']);
+        return fastestUtil.isHTML(this._getContentType());
+    }
+
+    isJavaScript() {
+        return fastestUtil.isJavaScript(this._getContentType());
+    }
+
+    isCss() {
+        return fastestUtil.isCss(this._getContentType());
+    }
+
+    _getContentType() {
+        return this.svrRes.headers['content-type'] || this.svrRes.headers['Content-Type'];
     }
 
     /**
      * 处理本次请求，分析并获取请求转发的参数
      *
-     * @param {String} requestUrl 请求，例如 /a/b/c.html
      * @return {Promise<any>}
      */
-    proxyRequest(requestUrl) {
+    proxyRequest() {
         return new Promise((resolve, reject) => {
             const { originDomain, rules } = this.proxyEnv;
+            const requestUrl = this.opts.url;
 
             // 1. 获取请求转发参数
             let proxyRequestOpts = new ProxyRequestOpts(originDomain, requestUrl);

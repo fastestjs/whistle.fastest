@@ -38,6 +38,7 @@ module.exports = (server, options) => {
     onerror(app);
 
     app.use(async (ctx, next) => {
+        // Object.keys(ctx.request) = [ 'app', 'req', 'res', 'ctx', 'response', 'originalUrl' ]
         util.setupContext(ctx, options);
 
         const { dataSource, clearup } = util.getDataSource();
