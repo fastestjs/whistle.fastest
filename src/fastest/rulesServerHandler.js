@@ -1,4 +1,16 @@
 const ProxyEnv = require('./ProxyEnv');
+const fastestUtil = require('./fastest-util');
+
+function getRequestParams(ctx) {
+    // 获得代理环境ID
+    let proxyEnvId = ctx.query['_fst_idx'] || ctx.cookies.get('_fst_idx') || fastestUtil.getParamFromURL('_fst_idx', ctx.request.headers.referer) || 27;
+
+    // 代理环境的域名
+    let proxyDomain = ctx.req.headers.host;
+
+    // 代理环境的域名
+    const uin = fastestUtil.getUin(ctx.cookies.get('uin'));
+}
 
 exports.handleRequestRules = async (ctx) => {
     // https://github.com/whistle-plugins/whistle.script#%E8%AE%BE%E7%BD%AE%E8%A7%84%E5%88%99

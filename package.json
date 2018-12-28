@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "events": "^3.0.0",
     "iconv-lite": "^0.4.24",
     "koa": "^2.6.2",
