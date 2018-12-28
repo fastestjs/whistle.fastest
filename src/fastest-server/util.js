@@ -1,4 +1,4 @@
-const CONFIG = require('../config');
+const CONFIG = require('./config');
 
 /**
  * 替换响应体里面的域名

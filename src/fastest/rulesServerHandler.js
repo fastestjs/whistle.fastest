@@ -1,5 +1,6 @@
 const ProxyEnv = require('./ProxyEnv');
 const fastestUtil = require('./fastest-util');
+const db = require('../fastest-server/db');
 
 function getRequestParams(ctx) {
     // 获得代理环境ID
@@ -10,17 +11,27 @@ function getRequestParams(ctx) {
 
     // 代理环境的域名
     const uin = fastestUtil.getUin(ctx.cookies.get('uin'));
+
+    return {
+        proxyEnvId,
+        proxyDomain,
+        uin
+    };
 }
 
 exports.handleRequestRules = async (ctx) => {
     // https://github.com/whistle-plugins/whistle.script#%E8%AE%BE%E7%BD%AE%E8%A7%84%E5%88%99
     console.log('handleRequestRules start', ctx.fullUrl);
 
-    // 模拟请求了配置管理页的数据
-    const fastestEnvData = require('../../mock/data1');
+    // 获取请求参数
+    const requestParams = getRequestParams(ctx);
+    console.log('handleRequestRules requestParams', requestParams);
+
+    // 请求配置管理页的数据
+    const fastestEnvData = db.getRemoteConfig(requestParams.proxyEnvId, requestParams.proxyDomain, { uin: requestParams.uin });
 
     // 获得当前的 fastest 配置参数
-    const proxyEnv = new ProxyEnv(fastestEnvData.result);
+    const proxyEnv = new ProxyEnv(fastestEnvData);
 
     // 完整的规则
     ctx.rules = [
