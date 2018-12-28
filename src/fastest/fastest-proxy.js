@@ -34,7 +34,15 @@ function removeVHost(requestUrl, pattern) {
  * @return {String}
  */
 function addVHost(content, pattern, testDomain) {
-    return content.replace(new RegExp(pattern, 'gi'), `${testDomain}/_fst_/${fastestUtil.replaceDotToUnderline(pattern)}/_fst_`);
+    const newContent = content.replace(new RegExp(pattern, 'gi'), `${testDomain}/_fst_/${fastestUtil.replaceDotToUnderline(pattern)}/_fst_`);
+
+    // 发现一旦重复替换了，则放弃
+    if (new RegExp('_fst_/_fst_', 'gi').test(newContent)) {
+        return content;
+    }
+
+    return newContent;
+
 }
 
 module.exports = {
