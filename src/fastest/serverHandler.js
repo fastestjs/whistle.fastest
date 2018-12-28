@@ -55,10 +55,10 @@ exports.handleRequest = async (ctx, next) => {
         const content = await ctx.getResText();
 
         // html 和静态文件处理不一样
-        const callRewrite = (fastest.isHTML() ? fastest.getRewriteHtml : fastest.getRewriteStatic).bind(fastest);
+        const callRewrite = fastest.isHTML() ? fastest.getRewriteHtml : fastest.getRewriteStatic;
 
         // 获取改写后的结果
-        const rewriteResult = await callRewrite(content, ctx);
+        const rewriteResult = await callRewrite.call(fastest, content, ctx);
 
         // 修改响应内容
         ctx.body = rewriteResult.body; // 修改响应内容
