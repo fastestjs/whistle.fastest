@@ -21,12 +21,22 @@ class Fastest {
         //     '_transformState',
         //     'statusCode',
         //     'headers'];
+        // svrRes.headers = {
+        //     'x-powered-by': 'Express',
+        //     date: 'Sat, 29 Dec 2018 05:33:45 GMT',
+        //     'content-type': 'image/x-icon',
+        //     'content-length': '1150',
+        //     connection: 'keep-alive',
+        //     server: 'nginx',
+        //     'last-modified': 'Wed, 07 Dec 2016 07:30:08 GMT',
+        //     etag: '"5847ba80-47e"',
+        //     'accept-ranges': 'bytes'
+        // };
         this.svrRes = null;
     }
 
     setSvrRes(svrRes) {
         this.svrRes = svrRes;
-
         // console.log('-----', this.opts.fullUrl, this.opts.url, this.svrRes.headers);
     }
 
