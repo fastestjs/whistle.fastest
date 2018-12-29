@@ -85,23 +85,16 @@ class Fastest {
         return new Promise((resolve, reject) => {
             const { proxyDomain, rules } = this.proxyEnv;
 
-            // 1. 获取 html 文件内容
-            let newContent = content;
+            // 1. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
+            let newContent = fastestProxy.addAllVHost(content, rules, proxyDomain);
 
-            // 2. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
-            for (let i = 0; i < rules.length; i++) {
-                let rule = rules[i];
-
-                newContent = fastestProxy.addVHost(newContent, rule.pattern, proxyDomain);
-            }
-
-            // 3. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
-            newContent = fastestUtil.removeIntegrityForHtml(newContent);
+            // 2. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
+            newContent = fastestProxy.removeIntegrityForHtml(newContent);
 
             // 是否使用eruda
             // let useEruda = ctx.cookies.get('nowh5testErudaEnv') || 0;
 
-            // 4. 返回
+            // 3. 返回
             resolve({
                 body: newContent,
                 header: {
@@ -121,17 +114,10 @@ class Fastest {
         return new Promise((resolve, reject) => {
             const { proxyDomain, rules } = this.proxyEnv;
 
-            // 1. 获取 html 文件内容
-            let newContent = content;
+            // 1. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
+            let newContent = fastestProxy.addAllVHost(content, rules, proxyDomain);
 
-            // 2. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
-            for (let i = 0; i < rules.length; i++) {
-                let rule = rules[i];
-
-                newContent = fastestProxy.addVHost(newContent, rule.pattern, proxyDomain);
-            }
-
-            // 3. 返回
+            // 2. 返回
             resolve({
                 body: newContent,
                 header: {
