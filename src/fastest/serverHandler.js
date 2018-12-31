@@ -67,6 +67,10 @@ exports.handleRequest = async (ctx, next) => {
         ctx.set(rewriteResult.header);
     } else {
         console.log(fastest.getContentType(), '====other=======');
+        ctx.set({
+            'x-test': 'other',
+            'x-fastest-id': fastest.proxyEnv.id
+        });
     }
 
     console.log('handleRequest end');

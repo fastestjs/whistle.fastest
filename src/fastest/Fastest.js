@@ -93,7 +93,7 @@ class Fastest {
      */
     getRewriteHtml(content, ctx) {
         return new Promise((resolve, reject) => {
-            const { proxyDomain, rules } = this.proxyEnv;
+            const { id, proxyDomain, rules } = this.proxyEnv;
 
             // 1. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
             let newContent = fastestProxy.addAllVHost(content, rules, proxyDomain);
@@ -108,7 +108,8 @@ class Fastest {
             resolve({
                 body: newContent,
                 header: {
-                    'x-test': 'html'
+                    'x-test': 'html',
+                    'x-fastest-id': id
                 }
             });
         });
@@ -122,7 +123,7 @@ class Fastest {
      */
     getRewriteStatic(content, ctx) {
         return new Promise((resolve, reject) => {
-            const { proxyDomain, rules } = this.proxyEnv;
+            const { id, proxyDomain, rules } = this.proxyEnv;
 
             // 1. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
             let newContent = fastestProxy.addAllVHost(content, rules, proxyDomain);
@@ -131,7 +132,8 @@ class Fastest {
             resolve({
                 body: newContent,
                 header: {
-                    'x-test': 'static'
+                    'x-test': 'static',
+                    'x-fastest-id': id
                 }
             });
         });
