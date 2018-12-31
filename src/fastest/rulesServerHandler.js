@@ -33,7 +33,7 @@ exports.handleRequestRules = async (ctx) => {
     // 获得当前的 fastest 配置参数
     const proxyEnv = new ProxyEnv(fastestEnvData);
 
-    console.log('------proxyEnv-----', proxyEnv);
+    // console.log('------proxyEnv-----', proxyEnv);
 
     // 完整的规则
     ctx.rules = [

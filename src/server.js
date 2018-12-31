@@ -38,6 +38,10 @@ module.exports = (server, options) => {
     onerror(app);
 
     app.use(async (ctx, next) => {
+        // 这里拿不到 serverIp
+        // ctx.request.req.originalReq
+        // ctx.request.req.originalRes
+
         // Object.keys(ctx.request) = [ 'app', 'req', 'res', 'ctx', 'response', 'originalUrl' ]
         util.setupContext(ctx, options);
 
