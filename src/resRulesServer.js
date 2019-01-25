@@ -23,7 +23,7 @@ module.exports = (server, options) => {
         const { handleResponseRules } = require('./fastest/resRulesServerHandler');
 
         // 处理规则
-        await handleResponseRules(ctx,options);
+        await handleResponseRules(ctx, options);
     });
 
     server.on('request', app.callback());
