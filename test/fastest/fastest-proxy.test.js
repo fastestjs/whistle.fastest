@@ -52,15 +52,24 @@ describe('./lib/fastest/fastest-proxy.js isMatchVProxy(requestUrl, pattern)', ()
 //         expect(fastestProxy.removeVProxy(url1, pattern1)).to.equal(url1Orignal);
 //     });
 //
+//     it('check url2 and pattern2 should removed', () => {
+//         expect(fastestProxy.removeVProxy(url2, pattern2)).to.equal(url2Orignal);
+//     });
+//
+//     it('check url3 and pattern3 should removed', () => {
+//         expect(fastestProxy.removeVProxy(url3, pattern3)).to.equal(url3Orignal);
+//     });
+//
 //     it('check url1 and pattern2 should not removed', () => {
 //         expect(fastestProxy.removeVProxy(url1, pattern2)).to.equal(url1);
 //     });
 //
-//     it('check url3 and pattern2', () => {
+//     it('check url2 and pattern3 should not removed', () => {
+//         expect(fastestProxy.removeVProxy(url2, pattern3)).to.equal(url2);
+//     });
+//
+//     it('check url3 and pattern2 should not removed', () => {
 //         expect(fastestProxy.removeVProxy(url3, pattern2)).to.equal(url3);
 //     });
 //
-//     it('check url3 and pattern3', () => {
-//         expect(fastestProxy.removeVProxy(url3, pattern3)).to.equal(url3Orignal);
-//     });
 // });

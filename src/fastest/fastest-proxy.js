@@ -90,7 +90,7 @@ function removeIntegrityForHtml(content) {
 module.exports = {
     MATCH_PROXY_TAG,
     isMatchVProxy,
-    removeVProxy,
+    // removeVProxy,
     addVProxy,
     addAllVProxy,
     removeIntegrityForHtml
