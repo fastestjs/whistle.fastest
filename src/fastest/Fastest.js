@@ -96,7 +96,7 @@ class Fastest {
             const { id, proxyDomain, rules } = this.proxyEnv;
 
             // 1. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
-            let newContent = fastestProxy.addAllVHost(content, rules, proxyDomain);
+            let newContent = fastestProxy.addAllVProxy(content, rules, proxyDomain);
 
             // 2. 去掉 script 标签上的 integrity 属性，不然会被安全策略阻挡，因为我们的确修改了 html 内容
             newContent = fastestProxy.removeIntegrityForHtml(newContent);
@@ -126,7 +126,7 @@ class Fastest {
             const { id, proxyDomain, rules } = this.proxyEnv;
 
             // 1. 根据规则，依次进行转发替换，将匹配的请求转发到 fastest 上
-            let newContent = fastestProxy.addAllVHost(content, rules, proxyDomain);
+            let newContent = fastestProxy.addAllVProxy(content, rules, proxyDomain);
 
             // 2. 返回
             resolve({

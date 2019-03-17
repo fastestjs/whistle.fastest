@@ -73,7 +73,7 @@ class ProxyRule {
     }
 
     matchProxyTypeOfHost(url) {
-        return fastestProxy.isMatchVHost(url, this.pattern);
+        return fastestProxy.isMatchVProxy(url, this.pattern);
     }
 
     getProxyTypeOfHostResult(url) {
@@ -81,7 +81,7 @@ class ProxyRule {
             // 注意 pattern 不一定是域名，可能包含路径，而 host 只需要域名即可
             // TODO 注意，如果 rule 是正则匹配，要考虑如何处理，比如限制正则匹配必须符合一定规范
             host: this.pattern.split('/')[0],
-            url: fastestProxy.removeVHost(url, this.pattern)
+            url: fastestProxy.addAllVProxy(url, this.pattern)
         };
     }
 }

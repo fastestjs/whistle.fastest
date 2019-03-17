@@ -13,7 +13,7 @@ whistle.fastest 主要功能点如下：
 
 ## 安装使用
 
-whistle 的插件需要安装到全局（[whistle插件开发文档](https://wproxy.org/whistle/plugins.html) ，安装命令如下：
+whistle 的插件需要安装到全局（详见[whistle插件开发文档](https://wproxy.org/whistle/plugins.html) ），安装命令如下：
 
 ```bash
 $ npm install whistle.fastest -g

@@ -1,7 +1,18 @@
 const fastestUtil = require('./fastest-util');
 
 /**
- * 判断该请求地址是不是已经使用了 host 重写了请求。
+ * URL中用于匹配转发的标记，在标记之间的请求将被进行特殊处理
+ *
+ * 例如 https://your-proxy-domain/_fst_/11_url_cn/_fst_/xyz.js
+ * 将被处理为 https://11.url.cn/xyz.js
+ * 同理，如果 11.url.cn 被设置了转发规则，也将被修改为: https://your-proxy-domain/_fst_/11_url_cn/_fst_/xyz.js
+ *
+ * @type {String}
+ */
+const MATCH_PROXY_TAG = '_fst_';
+
+/**
+ * 判断该请求地址是不是符合 fastest 转发规则。
  *
  * 例如：
  * http://fastest2.now.qq.com/_fst_/11_url_cn/_fst_/now/activity/spring-festival-2019/index_b4980e63.js?_bid=152
@@ -10,8 +21,8 @@ const fastestUtil = require('./fastest-util');
  * @param {String} pattern 要验证的配置项，例如 11.url.cn 或者 now.qq.com/cgi-bin
  * @return {Boolean}
  */
-function isMatchVHost(requestUrl, pattern) {
-    return !!requestUrl.match(new RegExp(`_fst_/${fastestUtil.replaceDotToUnderline(pattern)}/_fst_/`));
+function isMatchVProxy(requestUrl, pattern) {
+    return !!requestUrl.match(new RegExp(`${MATCH_PROXY_TAG}/${fastestUtil.replaceDotToUnderline(pattern)}/${MATCH_PROXY_TAG}/`));
 }
 
 /**
@@ -21,8 +32,8 @@ function isMatchVHost(requestUrl, pattern) {
  * @param {String} pattern 要验证的配置项，例如 11.url.cn 或者 now.qq.com/cgi-bin
  * @return {String}
  */
-function removeVHost(requestUrl, pattern) {
-    return requestUrl.replace(new RegExp(`_fst_/${fastestUtil.replaceDotToUnderline(pattern)}/_fst_/`, 'gi'), '');
+function removeVProxy(requestUrl, pattern) {
+    return requestUrl.replace(new RegExp(`${MATCH_PROXY_TAG}/${fastestUtil.replaceDotToUnderline(pattern)}/${MATCH_PROXY_TAG}/`, 'gi'), '');
 }
 
 /**
@@ -33,11 +44,11 @@ function removeVHost(requestUrl, pattern) {
  * @param {String} proxyDomain 测试域名，例如 fastest2.now.qq.com
  * @return {String}
  */
-function addVHost(content, pattern, proxyDomain) {
-    const newContent = content.replace(new RegExp(pattern, 'gi'), `${proxyDomain}/_fst_/${fastestUtil.replaceDotToUnderline(pattern)}/_fst_`);
+function addVProxy(content, pattern, proxyDomain) {
+    const newContent = content.replace(new RegExp(pattern, 'gi'), `${proxyDomain}/${MATCH_PROXY_TAG}/${fastestUtil.replaceDotToUnderline(pattern)}/${MATCH_PROXY_TAG}`);
 
     // 发现一旦重复替换了，则放弃
-    if (new RegExp('_fst_/_fst_', 'gi').test(newContent)) {
+    if (new RegExp(`${MATCH_PROXY_TAG}/${MATCH_PROXY_TAG}`, 'gi').test(newContent)) {
         return content;
     }
 
@@ -52,7 +63,7 @@ function addVHost(content, pattern, proxyDomain) {
  * @param {String} proxyDomain 测试域名，例如 fastest2.now.qq.com
  * @return {String}
  */
-function addAllVHost(content, rules, proxyDomain) {
+function addAllVProxy(content, rules, proxyDomain) {
     // 1. 获取 html 文件内容
     let newContent = content;
 
@@ -60,7 +71,7 @@ function addAllVHost(content, rules, proxyDomain) {
     for (let i = 0; i < rules.length; i++) {
         let rule = rules[i];
 
-        newContent = addVHost(newContent, rule.pattern, proxyDomain);
+        newContent = addVProxy(newContent, rule.pattern, proxyDomain);
     }
 
     return newContent;
@@ -77,9 +88,10 @@ function removeIntegrityForHtml(content) {
 }
 
 module.exports = {
-    isMatchVHost,
-    removeVHost,
-    addVHost,
-    addAllVHost,
+    MATCH_PROXY_TAG,
+    isMatchVProxy,
+    removeVProxy,
+    addVProxy,
+    addAllVProxy,
     removeIntegrityForHtml
 };
