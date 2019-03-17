@@ -28,7 +28,7 @@ function isMatchVProxy(requestUrl, pattern) {
 /**
  * 将包含了 fastest _fst_ 标记的url替换为原始的请求地址
  *
- * @param {String} requestUrl 请求的地址
+ * @param {String} requestUrl 请求的地址，例如 /xxx/xyz.js
  * @param {String} pattern 要验证的配置项，例如 11.url.cn 或者 now.qq.com/cgi-bin
  * @return {String}
  */
@@ -44,7 +44,7 @@ function removeVProxy(requestUrl, pattern) {
  * @param {String} proxyDomain 测试域名，例如 fastest2.now.qq.com
  * @return {String}
  */
-function addVProxy(content, pattern, proxyDomain) {
+function addVProxyForContent(content, pattern, proxyDomain) {
     const newContent = content.replace(new RegExp(pattern, 'gi'), `${proxyDomain}/${MATCH_PROXY_TAG}/${fastestUtil.replaceDotToUnderline(pattern)}/${MATCH_PROXY_TAG}`);
 
     // 发现一旦重复替换了，则放弃
@@ -63,7 +63,7 @@ function addVProxy(content, pattern, proxyDomain) {
  * @param {String} proxyDomain 测试域名，例如 fastest2.now.qq.com
  * @return {String}
  */
-function addAllVProxy(content, rules, proxyDomain) {
+function addAllVProxyForContent(content, rules, proxyDomain) {
     // 1. 获取 html 文件内容
     let newContent = content;
 
@@ -71,7 +71,7 @@ function addAllVProxy(content, rules, proxyDomain) {
     for (let i = 0; i < rules.length; i++) {
         let rule = rules[i];
 
-        newContent = addVProxy(newContent, rule.pattern, proxyDomain);
+        newContent = addVProxyForContent(newContent, rule.pattern, proxyDomain);
     }
 
     return newContent;
@@ -90,8 +90,8 @@ function removeIntegrityForHtml(content) {
 module.exports = {
     MATCH_PROXY_TAG,
     isMatchVProxy,
-    // removeVProxy,
-    addVProxy,
-    addAllVProxy,
+    removeVProxy,
+    addVProxyForContent: addVProxyForContent,
+    addAllVProxyForContent: addAllVProxyForContent,
     removeIntegrityForHtml
 };
