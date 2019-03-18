@@ -16,30 +16,37 @@ class ProxyEnv {
 
         /**
          * 正式环境的原始域名
+         * 注意：只有 status=0 时才返回
          * @type {String}
          */
         this.originDomain = data.origin_domain;
 
         /**
          * 测试环境的代理域名
+         * 注意：只有 status=0 时才返回
          * @type {String}
          */
         this.proxyDomain = data.proxy_domain;
 
         /**
          * 本地的 whistle 服务地址，例如 http://127.0.0.1:8080，用于代理转发时设置的代理服务地址
+         * 注意：只有 status=0 时才返回
          * @type {String}
          */
         this.whistleServer = data.whistle_server;
 
         /**
-         * 是否被禁用
+         * 状态
+         * 0=正常
+         * 1=被禁用
+         * 2=无权使用
          * @type {Boolean}
          */
-        this.isDisable = !!data.status || false;
+        this.status = data.status;
 
         /**
          * 代理规则列表
+         * 注意：只有 status=0 时才返回
          * @type {ProxyRule[]}
          */
         this.rules = this._getRules(data.rules);
