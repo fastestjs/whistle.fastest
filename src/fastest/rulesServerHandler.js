@@ -18,7 +18,7 @@ exports.handleRequestRules = async (ctx) => {
 
     // 获得当前的 fastest 配置参数
     const proxyEnv = db.getRemoteConfig(proxyEnvId);
-    console.log('[rulesServerHandler.js] proxyEnv', proxyEnv);
+    // console.log('[rulesServerHandler.js] proxyEnv', proxyEnv);
 
     // 如果有权使用规则
     if (proxyEnv.target.isAvailable()) {

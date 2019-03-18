@@ -26,7 +26,7 @@ exports.getRemoteConfig = function (proxyEnvId, opts = {}) {
     // 获得当前的 fastest 配置参数
     const proxyEnv = new ProxyEnv(ruleConfig);
 
-    console.log('[db.js] proxyEnv', proxyEnv);
+    // console.log('[db.js] proxyEnv', proxyEnv);
 
     return proxyEnv;
 };

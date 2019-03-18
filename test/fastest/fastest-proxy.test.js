@@ -52,27 +52,27 @@ describe('./lib/fastest/fastest-proxy.js isMatchVProxy(requestUrl, pattern)', ()
 
 describe('./lib/fastest/fastest-proxy.js removeVProxy(requestUrl, pattern)', () => {
     it('check url1 and pattern1 should removed', () => {
-        expect(fastestProxy.removeVProxy(urlParse(url1).path, pattern1)).to.equal(urlParse(url1Original).path);
+        expect(fastestProxy.removeVProxy(url1, pattern1)).to.equal(urlParse(url1Original).path);
     });
 
     it('check url2 and pattern2 should removed', () => {
-        expect(fastestProxy.removeVProxy(urlParse(url2).path, pattern2)).to.equal(urlParse(url2Original).path);
+        expect(fastestProxy.removeVProxy(url2, pattern2)).to.equal(urlParse(url2Original).path);
     });
 
     it('check url3 and pattern3 should removed', () => {
-        expect(fastestProxy.removeVProxy(urlParse(url3).path, pattern3)).to.equal('/now/abc');
+        expect(fastestProxy.removeVProxy(url3, pattern3)).to.equal(urlParse(url3Original).path);
     });
 
     it('check url1 and pattern2 should not removed', () => {
-        expect(fastestProxy.removeVProxy(urlParse(url1).path, pattern2)).to.equal(urlParse(url1).path);
+        expect(fastestProxy.removeVProxy(url1, pattern2)).to.equal(urlParse(url1).path);
     });
 
     it('check url2 and pattern3 should not removed', () => {
-        expect(fastestProxy.removeVProxy(urlParse(url2).path, pattern3)).to.equal(urlParse(url2).path);
+        expect(fastestProxy.removeVProxy(url2, pattern3)).to.equal(urlParse(url2).path);
     });
 
     it('check url3 and pattern2 should not removed', () => {
-        expect(fastestProxy.removeVProxy(urlParse(url3).path, pattern2)).to.equal(urlParse(url3).path);
+        expect(fastestProxy.removeVProxy(url3, pattern2)).to.equal(urlParse(url3).path);
     });
 
 });
