@@ -2,7 +2,7 @@ const Fastest = require('./Fastest');
 
 exports.handleRequest = async (ctx, next) => {
     // https://github.com/whistle-plugins/whistle.script#%E6%93%8D%E4%BD%9C%E8%AF%B7%E6%B1%82
-    console.log('handleRequest start', ctx.fullUrl);
+    console.log('[serverHandler.js] handleRequest(ctx, next) start', ctx.fullUrl);
 
     // Object.keys(ctx.request) = [ 'app', 'req', 'res', 'ctx', 'response', 'originalUrl' ]
     //  ctx.request.originalUrl === ctx.request.url
@@ -36,13 +36,16 @@ exports.handleRequest = async (ctx, next) => {
 
     // 处理本次请求，分析并获取请求转发的参数
     const proxyRequestOpts = await fastest.proxyRequest();
-    // console.log('--proxyRequestOpts--', proxyRequestOpts);
+    console.log('[serverHandler.js] handleRequest(ctx, next) --proxyRequestOpts--', proxyRequestOpts, fastest.proxyEnv.whistleServer);
 
     // 重要 fullUrl 一定要修改，因为后续 whistle 在调用 urlParse 方法时是拿这个值处理的
     ctx.fullUrl = proxyRequestOpts.fullUrl;
 
     // 发送转发请求，注意一定要设置好代理
-    const svrRes = await next({ proxyUrl: fastest.proxyEnv.whistleServer });
+    const svrRes = await next({
+        host: proxyRequestOpts.host,
+        proxyUrl: fastest.proxyEnv.whistleServer
+    });
 
     // 设置当次请求的结果
     fastest.setSvrRes(svrRes);
@@ -73,5 +76,5 @@ exports.handleRequest = async (ctx, next) => {
         });
     }
 
-    console.log('handleRequest end');
+    console.log('[serverHandler.js] handleRequest(ctx, next) end');
 };

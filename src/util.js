@@ -32,6 +32,8 @@ const parseHost = (host) => {
     }
 };
 const parseOptions = (options) => {
+    console.log('===========parseOptions() in options==============', options);
+
     if (!options) {
         return {};
     }
@@ -57,6 +59,9 @@ const parseOptions = (options) => {
         proxyUrl = proxyUrl.replace(/^[^/]*:\/\/|\s+|\/.*$/g, '');
         options.proxyUrl = proxyUrl && `http://${proxyUrl}`;
     }
+
+    console.log('===========parseOptions() return options==============', options);
+
     return options;
 };
 exports.parseOptions = parseOptions;

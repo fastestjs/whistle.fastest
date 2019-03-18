@@ -21,6 +21,12 @@ $ npm install whistle.fastest -g
 
 安装成功之后，可以在 whistle 的管理端页面 `Plugins` tab 页看到安装的插件。
 
+在规则中需要如下配置。将所有的请求都经过它来处理，注意需要传入 fastest 管理端接口的 IP 地址：
+
+```bash
+whistle.fastest://10.20.30.40 *
+```
+
 
 ## 开发调试
 

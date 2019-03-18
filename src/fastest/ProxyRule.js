@@ -51,28 +51,21 @@ class ProxyRule {
          * 操作，例如 host 或者 代理地址等
          * @type {String}
          */
-        this.operatorURI = data.host;
-
-        /**
-         * 代理类型
-         * @type {Object}
-         */
-        this.proxyType = data.proxy_type;
-
-        /**
-         * 规则类型
-         * @type {Object}
-         */
-        this.type = data.type;
+        this.operatorURI = data.testip;
 
         /**
          * 是否被禁用
          * @type {Boolean}
          */
-        this.isDisable = !!data.status || false;
+        this.isDisable = !data.enabled;
     }
 
-    matchProxyTypeOfHost(url) {
+    /**
+     * 本规则是否匹配上了某个url
+     * @param {String} url
+     * @return {Boolean}
+     */
+    isMatched(url) {
         return fastestProxy.isMatchVProxy(url, this.pattern);
     }
 
@@ -81,10 +74,19 @@ class ProxyRule {
             // 注意 pattern 不一定是域名，可能包含路径，而 host 只需要域名即可
             // TODO 注意，如果 rule 是正则匹配，要考虑如何处理，比如限制正则匹配必须符合一定规范
             host: this.pattern.split('/')[0],
-            url: fastestProxy.addAllVProxy(url, this.pattern)
+            url: fastestProxy.removeVProxy(url, this.pattern)
         };
     }
-}
 
+    getOriginalHost() {
+        // 注意 pattern 不一定是域名，可能包含路径，而 host 只需要域名即可
+        // TODO 注意，如果 rule 是正则匹配，要考虑如何处理，比如限制正则匹配必须符合一定规范
+        return this.pattern.split('/')[0];
+    }
+
+    getOriginalUrl(url) {
+        return fastestProxy.removeVProxy(url, this.pattern);
+    }
+}
 
 module.exports = ProxyRule;

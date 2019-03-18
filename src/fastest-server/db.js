@@ -1,60 +1,32 @@
-const _ = require('./util');
-
-const RULE_TYPE_STATIC = 1;
-const RULE_TYPE_CGI = 2;
+const ProxyEnv = require('../fastest/ProxyEnv');
 
 /**
- * 从远程拉取代理环境信息
+ * 从远程拉取代理环境信息，获取该id对应的环境配置和该用户有权使用的列表
+ *
+ * 1. 过滤出当前的请求的环境配置，如果有权限，则使用之
+ * 2. 拉取该用户拥有的其他环境列表，以便在前端页面可以自由切换环境
  *
  * @param {Number} proxyEnvId 代理环境ID
- * @param {String} proxyDomain 代理环境的域名
  * @param {Object} [opts] 额外参数
- * @param {Number} [opts.uin] uin值
  */
-exports.getRemoteConfig = function (proxyEnvId, proxyDomain, opts = {}) {
+exports.getRemoteConfig = function (proxyEnvId, opts = {}) {
     console.log('开始获取远程配置');
 
-    // 原始环境的域名
-    let originDomain = proxyDomain.replace(/fastest\./, '');
-
     // 远程请求获取配置信息
-    let remoteConfigData = require('../../tmp/data');
-
-    // 所有代理环境列表
-    let allProxyEnvList = remoteConfigData.data || [];
-
-    // 获得用户 uin，以便做白名单控制
-    if (opts.uin) {
-        allProxyEnvList = _.filterListByUin(allProxyEnvList, opts.uin);
-    }
-
-    // 根据 id 从列表中找出对于的数据
-    const data = _.getConfById(allProxyEnvList, proxyEnvId);
-
-    // 代理规则
-    const rules = data.rules.map((item) => {
-        return {
-            type: item.type,
-            proxy_type: 1,
-            rule: item.rule,
-            host: item.host,
-            status: 1
-        };
-    });
+    let remoteData = require('../../tmp/fastest3data').result;
 
     const ruleConfig = {
-        id: data.id,
-        name: data.name,
-        origin_domain: data.product_domain,
-        proxy_domain: proxyDomain,
-        whistle_server: 'http://127.0.0.1:8080',
-        status: 1,
-        rules: rules
+        originDomain: remoteData.origin_domain,
+        proxyDomain: remoteData.proxy_domain,
+        whistleServer: remoteData.whistle_server || 'http://127.0.0.1:8080',
+        target: remoteData.target,
+        myList: remoteData.mylist
     };
 
-    // ruleConfig.envConfList = allProxyEnvList;
+    // 获得当前的 fastest 配置参数
+    const proxyEnv = new ProxyEnv(ruleConfig);
 
-    return ruleConfig;
+    console.log('[db.js] proxyEnv', proxyEnv);
+
+    return proxyEnv;
 };
-
-// console.log(exports.getRemoteConfig(27, 'fastest.now.qq.com'));
